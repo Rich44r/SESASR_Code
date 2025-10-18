@@ -18,6 +18,7 @@ class ResetNode(Node):
         self.get_logger().info('ResetNode has been started.')
 
     def listener_callback(self, msg):
+        # Counts the position and suggests resets if out of bounds
         self.get_logger().info(f'Received pose: {msg}')
         self.counterx += msg.x
         self.countery += msg.y
