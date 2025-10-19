@@ -19,7 +19,7 @@ class ResetNode(Node):
 
     def listener_callback(self, msg):
         # Counts the position and suggests resets if out of bounds
-        self.get_logger().info(f'Received pose: ({msg.x}, {msg.y})')
+        self.get_logger().info(f'Current Position: ({msg.x}, {msg.y})')
 
         if msg.x > 6 or msg.y > 6 or msg.x < -6 or msg.y < -6:
             self.get_logger().info('Position out of bounds, RESET to (0,0)')

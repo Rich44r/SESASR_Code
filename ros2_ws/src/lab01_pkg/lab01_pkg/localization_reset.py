@@ -29,8 +29,8 @@ class localization(Node):
         self.get_logger().info(f'Received Twist: linear.x={msg.linear.x}, linear.y={msg.linear.y}')
         self.X += msg.linear.x
         self.Y += msg.linear.y
-        
-        self.get_logger().info(f'Position: X={self.X}, Y={self.Y}')
+
+        self.get_logger().info(f'Position: ({self.X},{self.Y})')
         self.publisher_.publish(Pose2D(x=self.X, y=self.Y))
 
     def callback_reset(self, msg):
@@ -39,7 +39,7 @@ class localization(Node):
             self.Y = 0.0
             self.publisher_.publish(Pose2D(x=self.X, y=self.Y))
             self.get_logger().info('Reset message received: POSITION RESET TO (0,0)')
-        
+        self.get_logger().info(f'Current Position: ({self.X},{self.Y})')
 
 
 def main(args=None):
