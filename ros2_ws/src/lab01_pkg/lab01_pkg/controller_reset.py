@@ -1,5 +1,6 @@
 import rclpy
 from rclpy.node import Node
+from std_msgs.msg import Bool
 
 from geometry_msgs.msg import Twist
 
@@ -7,15 +8,30 @@ ROBOT_SPEED = 1.0  # m/s
 
 class ControllerNode(Node):
     def __init__(self):
-        super().__init__('controller_node')
+        super().__init__('controller_reset')
+        
         timer_period = 1.0  # seconds
         self.N = 1 #durata di ogni fase del movimento in secondi
         self.dir = 0 #direction of the robot : 0=X+, 1=Y+, 2=X-, 3=Y-
         self.it = 0 #iteration counter
 
-        self.publisher_ = self.create_publisher(Twist, 'cmd_vel', 10)  # crea emittente di messaggi di tipo Twist sul topic cmd_vel
         self.timer = self.create_timer(timer_period, self.timer_callback)  # timer impostato a 1 secondo
+        self.subscription_reset = self.create_subscription(
+            Bool,
+            'reset',
+            self.reset_callback,
+            10)
+        self.subscription_reset  # prevent unused variable warning
+        self.publisher_ = self.create_publisher(Twist, 'cmd_vel', 10)  # crea emittente di messaggi di tipo Twist sul topic cmd_vel
         self.get_logger().info('Controller node has been started.')
+        
+    def reset_callback(self,msg):
+        if msg.data: #if the reset message is true
+            self.get_logger().info('Reset message received: RESTARTING THE CONTROL SEQUENCE')
+            self.N = 1
+            self.dir = 0
+            self.it = 0
+
 
     def timer_callback(self):
         msg = Twist()  # crea un messaggio di tipo Twist ad ogni scadenza del timer
@@ -51,8 +67,6 @@ class ControllerNode(Node):
             self.N += 1  # increase duration after completing a full square
             self.it = 0
             self.dir = 0  # reset direction to start a new square
-
-
 
 
 
