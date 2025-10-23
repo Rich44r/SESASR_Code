@@ -1,0 +1,66 @@
+Idee chiave della logica
+Il fascio “frontale” (indice 0 o il più vicino allo 0°) colpisce un ostacolo con una sezione effettiva più ampia lungo l’asse orizzontale rispetto ai fasci inclinati di ±30°: quando guardi frontalmente un muro, il raggio incide quasi perpendicolare e misura la distanza minima al piano; a ±30° il raggio “taglia” il muro con un’angolazione obliqua, quindi tende a misurare distanze maggiori inizialmente.
+
+Per questo, la tua logica fa bene a usare prima il fascio frontale per decidere lo stop, e poi a usare i fasci laterali per scegliere la direzione di rotazione.
+
+Spiegazione passo-passo del tuo pseudocodice
+Rilevamento ostacolo frontale
+
+if scan.ranges[0] < 0.75:
+
+Hai un muro entro 0.75 m davanti: velocity.linear.x = 0.0 (ti fermi).
+
+Scelta verso cui ruotare: confronti i “quasi-laterali” destra/sinistra (es. 89° vs 269°) e ruoti verso il lato con più spazio:
+
+Se ranges[89] > ranges[269] allora angular.z = +Max_angVel (ruota CCW, verso sinistra).
+
+Altrimenti angular.z = -Max_angVel (ruota CW, verso destra).
+
+Avanzamento se libero
+
+else: velocity.linear.x = Max_Vel
+
+Nessun ostacolo “a perpendicolo” entro 0.75 m, quindi procedi.
+
+Salvaguardie a ±30° (indici ~29 e ~329 se incremento angolare ≈ 1°)
+
+Se uno dei fasci a circa ±30° vede un ostacolo vicino (< 0.75), forzi una rotazione per evitare che una parete/ostacolo obliquo ti chiuda la traiettoria:
+
+if scan.ranges[29] < 0.75: angular.z = -Max_angVel (ostacolo a sinistra → gira a destra)
+
+elif scan.ranges[329] < 0.75: angular.z = +Max_angVel (ostacolo a destra → gira a sinistra)
+
+Perché il 30° “prende il controllo” dopo qualche rotazione
+All’inizio il fascio frontale intercetta subito il muro (geometria più “perpendicolare”), quindi la priorità è fermarsi e scegliere una direzione di rotazione in base ai laterali (≈90°/270°) che indicano il lato più libero.
+
+Durante la rotazione, l’orientamento del robot cambia: l’ostacolo che prima era frontalissimo entra gradualmente nel campo dei fasci a ±30°. Appena uno di questi scende sotto la soglia (0.75 m), scatta la logica di sicurezza dei 30°, che prevale per evitare di “strisciare” lungo il muro.
+
+In breve: frontale ferma e decide il verso; i laterali aiutano a scegliere dove ruotare; i ±30° diventano sensibili quando l’ostacolo non è più perfettamente frontale ma ancora vicino sul lato, e quindi governano l’evitamento fine.
+
+Consigli pratici
+Angoli/indici: verifica angle_min, angle_increment e il mapping indice→angolo: 
+k
+(
+θ
+)
+=
+round
+⁡
+(
+(
+θ
+−
+angle_min
+)
+/
+angle_increment
+)
+k(θ)=round((θ−angle_min)/angle_increment). Assicurati che 0, 29, 89, 269, 329 corrispondano davvero a 0°, ±30°, ±90° nel tuo LiDAR.
+
+Priorità dei comandi: applica le condizioni in un ordine chiaro (prima stop frontale, poi scelta verso, poi salvaguardie ±30°) per evitare che si sovrascrivano i comandi nello stesso ciclo.
+
+Isteresi e debounce: usa soglie leggermente diverse per entrare/uscire (es. 0.75 m per fermare, 0.80 m per ripartire) o un piccolo filtro temporale per evitare oscillazioni.
+
+Velocità: quando ruoti vicino a ostacoli ai 30°, limita anche linear.x (es. riduci a 0 o molto bassa) per evitare collisioni radenti.
+
+Vuoi che ti aiuti a riscrivere la callback con questo ordine di priorità e con il calcolo degli indici dai gradi, così la rendiamo robusta al tuo LiDAR specifico? Se mi dici FOV, angle_min e angle_increment, adatto gli indici esatti.
