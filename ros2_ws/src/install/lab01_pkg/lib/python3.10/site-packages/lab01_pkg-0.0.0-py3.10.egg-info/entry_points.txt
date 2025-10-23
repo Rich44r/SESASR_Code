@@ -1,0 +1,3 @@
+[console_scripts]
+controller = lab01_pkg.controller:main
+
