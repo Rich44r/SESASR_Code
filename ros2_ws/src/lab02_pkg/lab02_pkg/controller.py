@@ -16,6 +16,9 @@ class ControllerNode(Node):
     def __init__(self):
         super().__init__('Controller')
         
+        self.state = "forward" #go forward by default
+        self.start_yaw = None  # To track the starting yaw for rotations
+
         self.publisher = self.create_publisher(Twist, 'cmd_vel', 10)
         self.subscription_scan = self.create_subscription(
             LaserScan,
@@ -74,11 +77,13 @@ class ControllerNode(Node):
                     distance_right.append(RANGE_MAX)  #assume no obstacle in that direction
             if max(distance_left)>max(distance_right):
                 #self.get_logger().info('turning right')
-                send.angular.z = ANGULAR_VELOCITY
-            else:
-                send.angular.z = -ANGULAR_VELOCITY
-                #self.get_logger().info('turning left')
+                #send.angular.z = ANGULAR_VELOCITY
+                self.state = "left"
                 distance_left.clear()
+            else:
+                #send.angular.z = -ANGULAR_VELOCITY
+                #self.get_logger().info('turning left')
+                self.state = "right"
                 distance_right.clear()
 
         self.publisher.publish(send)
@@ -87,6 +92,7 @@ class ControllerNode(Node):
         
 
     def odom_callback(self, msg):
+        send = Twist()
         position = msg.pose.pose.position
         orientation = msg.pose.pose.orientation
         quaternion = (
@@ -96,10 +102,39 @@ class ControllerNode(Node):
             orientation.w)
         euler = tf_transformations.euler_from_quaternion(quaternion)
         yaw = euler[2]
-
         self.get_logger().info(
-            f'Position -> x: {position.x:.2f}, y: {position.y:.2f}, Yaw: {yaw:.2f} rad')
-        
+            f'Odom -> x: {position.x:.2f}, y: {position.y:.2f}, Yaw: {yaw:.2f} rad')
+
+        if self.state == "left":
+            # Save the starting yaw the first time
+            if self.start_yaw is None:
+                self.start_yaw = yaw
+            # Calculate the angle difference
+            diff = self.normalize_angle(yaw - self.start_yaw)
+            if abs(diff) < math.pi/2 - 0.1:
+                send.angular.z = ANGULAR_VELOCITY
+                self.publisher.publish(send)
+            else:
+                self.state = "forward"
+                send.angular.z = 0.0
+                self.publisher.publish(send)
+                self.start_yaw = None  # Reset for the next rotation
+
+        elif self.state == "right":
+            # Save the starting yaw the first time
+            if self.start_yaw is None:
+                self.start_yaw = yaw
+            # Calculate the angle difference
+            diff = self.normalize_angle(yaw - self.start_yaw)
+            if abs(diff) < math.pi/2 - 0.1:
+                send.angular.z = -ANGULAR_VELOCITY
+                self.publisher.publish(send)
+            else:
+                self.state = "forward"
+                send.angular.z = 0.0
+                self.publisher.publish(send)
+                self.start_yaw = None  # Reset for the next rotation
+
     def ground_callback(self, msg):
         position = msg.pose.pose.position
         orientation = msg.pose.pose.orientation
@@ -115,7 +150,12 @@ class ControllerNode(Node):
             f'Ground Truth -> x: {position.x:.2f}, y: {position.y:.2f}, Yaw: {yaw:.2f} rad')
 
 
-        
+    def normalize_angle(self, angle):
+        while angle > math.pi:
+            angle -= 2 * math.pi
+        while angle < -math.pi:
+            angle += 2 * math.pi
+        return angle
         
 
 def main(args=None):
