@@ -111,7 +111,7 @@ class ControllerNode(Node):
                 self.start_yaw = yaw
             # Calculate the angle difference
             diff = self.normalize_angle(yaw - self.start_yaw)
-            if abs(diff) < math.pi/2 - 0.1:
+            if abs(diff) < math.pi/2 - 0.12:
                 send.angular.z = ANGULAR_VELOCITY
                 self.publisher.publish(send)
             else:
@@ -126,7 +126,7 @@ class ControllerNode(Node):
                 self.start_yaw = yaw
             # Calculate the angle difference
             diff = self.normalize_angle(yaw - self.start_yaw)
-            if abs(diff) < math.pi/2 - 0.1:
+            if abs(diff) < math.pi/2 - 0.12:
                 send.angular.z = -ANGULAR_VELOCITY
                 self.publisher.publish(send)
             else:
@@ -156,7 +156,8 @@ class ControllerNode(Node):
         while angle < -math.pi:
             angle += 2 * math.pi
         return angle
-        
+
+
 
 def main(args=None):
     rclpy.init(args=args)
