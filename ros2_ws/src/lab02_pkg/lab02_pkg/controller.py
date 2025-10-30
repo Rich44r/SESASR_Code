@@ -9,7 +9,7 @@ from nav_msgs.msg import Odometry
 
 LINEAR_VELOCITY = 0.20  # m/s
 ANGULAR_VELOCITY = 1.5  # rad/s
-MINIMUM_DISTANCE = 0.5  # m
+MINIMUM_DISTANCE = 0.75  # m
 RANGE_MAX = 3.5  # m
 
 class ControllerNode(Node):
@@ -76,15 +76,10 @@ class ControllerNode(Node):
                 else:
                     distance_right.append(RANGE_MAX)  #assume no obstacle in that direction
             if max(distance_left)>max(distance_right):
-                #self.get_logger().info('turning right')
-                #send.angular.z = ANGULAR_VELOCITY
-                self.state = "left"
-                distance_left.clear()
-            else:
-                #send.angular.z = -ANGULAR_VELOCITY
-                #self.get_logger().info('turning left')
+                self.state = "left"  
+            else:               
                 self.state = "right"
-                distance_right.clear()
+                
 
         self.publisher.publish(send)
                 
