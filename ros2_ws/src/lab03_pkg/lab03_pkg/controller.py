@@ -41,10 +41,10 @@ class ControllerNode(Node):
         self.subscriber_ground
         self.get_logger().info('Controller node has been started.')
 
-    def get_index(self, target_angle, angle_increment):
+    def get_index(self, target_angle, angle_min, angle_increment, angle_max):
         target_rad = math.radians(target_angle)
-        index = target_rad/angle_increment
-        return int(index)
+        index = (target_rad - angle_min) / angle_increment
+        return min((angle_max-angle_min)/angle_increment, math.floor(index))
 
 
     def laser_callback(self, msg):
@@ -55,9 +55,9 @@ class ControllerNode(Node):
         send = Twist()
 
         #calculate indices for front region
-        min1_front = self.get_index(0,msg.angle_increment)
-        max1_front = self.get_index(30,msg.angle_increment)
-        min2_front = self.get_index(330,msg.angle_increment)
+        min1_front = self.get_index(0,msg.angle_min,msg.angle_increment, msg.angle_max)
+        max1_front = self.get_index(30,msg.angle_min,msg.angle_increment, msg.angle_max)
+        min2_front = self.get_index(330,msg.angle_min,msg.angle_increment, msg.angle_max)
         max2_front = len(msg.ranges)-1 #last index
         #front interval of 60 degrees
         for i in range(min1_front,max1_front):
@@ -81,10 +81,10 @@ class ControllerNode(Node):
         else:
             send.linear.x = 0.0
             #calculate left and right indices
-            min_left = self.get_index(30,msg.angle_increment)
-            max_left = self.get_index(90,msg.angle_increment)
-            min_right = self.get_index(270,msg.angle_increment)
-            max_right = self.get_index(330,msg.angle_increment)
+            min_left = self.get_index(30,msg.angle_min,msg.angle_increment, msg.angle_max)
+            max_left = self.get_index(90,msg.angle_min,msg.angle_increment, msg.angle_max)
+            min_right = self.get_index(270,msg.angle_min,msg.angle_increment, msg.angle_max)
+            max_right = self.get_index(330,msg.angle_min,msg.angle_increment, msg.angle_max)
 
             #decide to turn left or right
             for i in range(min_left,max_left):
@@ -92,7 +92,10 @@ class ControllerNode(Node):
                     distance_left.append(msg.ranges[i])
                 else:
                     distance_left.append(RANGE_MAX)  #assume no obstacle in that direction
-            for i in range(min_right,max_right):
+            self.get_logger().info(f'dimensione : {len(msg.ranges)}')
+
+            for i in range(min_right,max_right-1):
+                self.get_logger().info(f'indice right : {i}')
                 if not math.isinf(msg.ranges[i]):
                     distance_right.append(msg.ranges[i])
                 else:
