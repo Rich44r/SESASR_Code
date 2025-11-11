@@ -5,20 +5,20 @@ import matplotlib.pyplot as plt
 from math import degrees, sin, cos
 import sympy
 
+from lab04_pkg.utils import landmark_model_sample_pose
+
 arrow = u'$\u2191$'
 
-from lab04_pkg.utils import residual
-from lab04_pkg.plot_utils import plot_covariance
+
+
 from lab04_pkg.ekf import RobotEKF
 from lab04_pkg.probabilistic_models import (
     evaluate_sampling_dist,
+    landmark_sm_simpy,
     sample_velocity_motion_model,
-    sample_odometry_motion_model,
-    get_odometry_command,
-    landmark_range_bearing_model,
-    landmark_range_bearing_sensor,
+    velocity_mm_simpy
+
 )
-from lab04_pkg.probabilistic_models import velocity_mm_simpy, odometry_mm_simpy, landmark_sm_simpy
 
 
 
@@ -62,22 +62,45 @@ def main():
     plt.show()
 
     #Gt jacobian and Vt jacobian with sympy
-    Gt, Vt = velocity_mm_simpy()[1:3]
+    _, eval_Gt, eval_Vt = velocity_mm_simpy()
+
+    Gt_numerical =eval_Gt(*x, *u, dt)
+    print("G_t:\n", sympy.latex(sympy.Matrix(Gt_numerical)))
+    Vt_numerical = eval_Vt(*x, *u, dt)
+    print("V_t:\n", sympy.latex(sympy.Matrix(Vt_numerical)))
 
     ####Probabilistic measurement model - landmark model (sampling):####
     n_samples2 = 1000
-    
+    robot_pose = np.array([0.0, 0.0, math.pi/4])  # robot pose
+    z = np.array([5.0, math.pi/6])  # measurement [range, bearing]
+    landmark_pos = np.array([5.0, 2.0])  # landmark
+    sigma = np.array([0.3, math.pi/24])  # noise standard deviations [range, bearing]
 
-    #initialize EKF for robot with velocity motion model
-    """Initialize the EKF for a robot with velocity motion model
-        ekf_robot = RobotEKF(
-        dim_x = 3,
-        dim_u = 2,
-        eval_gux = sample_velocity_motion_model,
-        eval_Gt = velocity_mm_simpy()[1],
-        eval_Vt = velocity_mm_simpy()[2],
-    )
-    """
+    xland_prime = np.zeros((n_samples2, 3))
+    for i in range(n_samples2):
+        xland_prime[i, :] = landmark_model_sample_pose(z, landmark_pos, sigma)
+         # plot robot pose
+        rotated_marker = mpl.markers.MarkerStyle(marker=arrow)
+        rotated_marker._transform = rotated_marker.get_transform().rotate_deg(math.degrees(xland_prime[i, 2])-90)
+        plt.scatter(xland_prime[i, 0], xland_prime[i, 1], marker=rotated_marker, s=80, facecolors='none', edgecolors='b')
+
+    # plot real pose
+    rotated_marker = mpl.markers.MarkerStyle(marker=arrow)
+    rotated_marker._transform = rotated_marker.get_transform().rotate_deg(math.degrees(robot_pose[2])-90)
+    plt.scatter(robot_pose[0], robot_pose[1], marker=rotated_marker, s=140, facecolors='none', edgecolors='r')
+
+    plt.xlabel("x-position [m]")
+    plt.ylabel("y-position [m]")
+    plt.title("Landmark Model Pose Sampling")
+    plt.show()
+
+    #Ht jacobian with sympy
+    _, Ht = landmark_sm_simpy()
+    Ht_numerical = Ht(*robot_pose, *landmark_pos)
+    print("H_t:\n", sympy.latex(sympy.Matrix(Ht_numerical)))
+
+
+
 
 
 
