@@ -11,8 +11,8 @@ import yaml
 class RobotEKF:
     def __init__(
         self,
-        dim_x=2, #v,w
-        dim_u=3, #x,y,theta
+        dim_x=3,
+        dim_u=2, 
         eval_gux=None,
         eval_Gt=None,
         eval_Vt=None,
@@ -30,6 +30,7 @@ class RobotEKF:
         self.eval_Gt = eval_Gt
         self.eval_Vt = eval_Vt
 
+
         self._I = np.eye(dim_x)  # identity matrix used for computations
 
         self.odom_sub = self.create_subscription(Odometry,'/odom',self.odom_callback,10) # Subscriber
@@ -40,7 +41,10 @@ class RobotEKF:
         self.ekf_pub = self.create_publisher(Odometry, '/ekf', 10)
 
         # Timer per la predizione
+        self.last_u = np.zeros(2)  # ultima velocità nota [v, w]
         self.timer = self.create_timer(self.dt, self.predict_step)
+    
+
 
         #lettura landmark nel file yaml
         self.filename = "/home/federichina/turtlebot3_perception/turtlebot3_perception/config/landmarks.yaml"
@@ -72,9 +76,15 @@ class RobotEKF:
         w = (dx[2]) / self.dt
         u = np.array([v, w])
 
+        self.last_u = np.array([v, w])  # salva ultima velocità per il timer
+
+
         self.predict(u, self.sigma_u, g_extra_args=(self.dt,))
     
     
+    def predict_step(self):
+        # Predizione continua usando ultima velocità nota e non solo quando riceve pubblicazioni
+        self.predict(self.last_u, self.sigma_u, self.dt)
 
     def predict(self, u, sigma_u, g_extra_args=()):
         """
@@ -109,7 +119,35 @@ class RobotEKF:
         Vt = self.eval_Vt(*args, *g_extra_args)
         self.Sigma = Gt @ self.Sigma @ Gt.T + Vt @ self.Mt @ Vt.T
 
-#da qui è da fare :)
+
+    def landmark_callback(self, msg: LandmarkArray):
+     for lm in msg.landmarks:
+        z = np.array([lm.range, lm.bearing])  # misura attuale (range, bearing)
+        lm_x, lm_y = self.landmarks_matrix[lm.id]  # coordinate note del landmark
+        Ht_args = (self.mu[0], self.mu[1], self.mu[2], lm_x, lm_y)  # argomenti Jacobiana
+        hx_args = (self.mu[0], self.mu[1], self.mu[2], lm_x, lm_y)  # argomenti modello misura
+        Qt = np.diag([0.1**2, (5*np.pi/180)**2])   #matrice di rumore associata al sensore: descrive quanto fiducia abbiamo nelle misure di range e bearing.
+            # Qui, il range ha 10 cm di deviazione standard e il bearing ha un errore di circa 5 gradi.
+
+    # differenza tra la misura reale e quella attesa, ma "ripiegando" l’angolo dentro l’intervallo [-π, π], così l’errore angolare resta coerente.
+        def residual(z, z_hat):
+            y = z - z_hat  # innovazione
+            y[1] = np.arctan2(np.sin(y[1]), np.cos(y[1]))  # normalizza angolo
+            return y
+
+        self.update(  # correzione  della predizione 
+            z=z,
+            eval_hx=eval_hx,
+            eval_Ht=eval_Ht,
+            Qt=Qt,
+            Ht_args=Ht_args,
+            hx_args=hx_args,
+            residual=residual
+        )
+
+   
+            
+                        
     def update(self, z, eval_hx, eval_Ht, Qt, Ht_args=(), hx_args=(),  residual=np.subtract, **kwargs):
         """Performs the update innovation of the extended Kalman filter.
 
@@ -137,24 +175,26 @@ class RobotEKF:
             Ht = np.atleast_2d(Ht).astype(float)
 
         # Compute the Kalman gain, you need to evaluate the Jacobian Ht
-        Ht = eval_Ht(*Ht_args)
-        SigmaHT = self.Sigma @ Ht.T
-        self.S = Ht @ SigmaHT + Qt
-        self.K = SigmaHT @ inv(self.S)
+        Ht = eval_Ht(*Ht_args) # Calcola la Jacobiana della funzione di misura Ht
+        SigmaHT = self.Sigma @ Ht.T     # SigmaHT = Σ * H^T ; preparazione per il calcolo della S 
+        self.S = Ht @ SigmaHT + Qt      #S = H Σ H^T + Q , covarianza dell'innovazione (quanto ci si aspetta che la misura vari)
+        self.K = SigmaHT @ inv(self.S)  # K = Σ H^T S^-1 , Kalman gain: quanto "credere" alla misura rispetto alla predizione
 
         # Evaluate the expected measurement and compute the residual, then update the state prediction
         z_hat = eval_hx(*hx_args)
-        if np.isscalar(z_hat):
+        if np.isscalar(z_hat): # Convert to vector if necessary
             z_hat = np.asarray([z_hat], float)
 
         # if the z measurement include an angle update, we need to specify the positional index to normalize the residual
-        y = residual(z, z_hat, **kwargs)
+        y = residual(z, z_hat, **kwargs) #y = z - z_hat. 
+        # Aggiorna lo stato: mu = mu + K * y
         self.mu = self.mu + self.K @ y
 
         # P = (I-KH)P(I-KH)' + KRK' is more numerically stable and works for non-optimal K vs the equation
         # P = (I-KH)P usually seen in the literature.
         # Note that I is the identity matrix.
         I_KH = self._I - self.K @ Ht
+        # Sigma' = (I-KH) Σ (I-KH)^T + K Q K^T
         self.Sigma = I_KH @ self.Sigma @ I_KH.T + self.K @ Qt @ self.K.T
 
         self.publish_ekf()
