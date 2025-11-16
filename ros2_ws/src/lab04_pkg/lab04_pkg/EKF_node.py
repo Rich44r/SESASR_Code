@@ -45,6 +45,8 @@ class EKF_node(Node):
         self.theta_z = 0.0
         self.v = 0.0
         self.w = 0.0
+        #flag to check if odometry has been received
+        self.ekf_ready = False
 
         #lettura landmark nel file yaml
         self.filename = "../../turtlebot3_perception/turtlebot3_perception/config/landmarks.yaml"
@@ -81,7 +83,6 @@ class EKF_node(Node):
 
 
         self.last_odom = None # ultima lettura di odometria
-        self.landmarks = None # ultima lettura dei landmarks
 
         self.subscription  # prevent unused variable warning
         self.get_logger().info('EKF node has been started.')
@@ -103,9 +104,16 @@ class EKF_node(Node):
         # extract linear and angular velocities
         self.v = msg.twist.twist.linear.x
         self.w = msg.twist.twist.angular.z
+
+        #enable EKF after first odometry reception
+        self.ekf_ready = True
         self.get_logger().info(f'Extracted velocities: v={self.v}, w={self.w}')
 
     def landmarks_callback(self, msg):
+        if not self.ekf_ready:
+            self.get_logger().info('EKF not ready, odometry data not yet received.')
+            return
+
         landmarks_measured = msg
         self.get_logger().info(f'Received Landmarks: number of landmarks={len(msg.landmarks)}')
         #Process each landmark measurement
@@ -122,13 +130,14 @@ class EKF_node(Node):
                         Ht_args=(*self.ekf.mu, *self.landmarks_matrix),  # the Ht function requires a flattened array of parameters
                         hx_args=(self.ekf.mu, lmark, self.sigma_z),
                         residual=utils.residual,
-                        angle_idx=-1,
+                        angle_idx=id_seen,
                     )
         
 
 
     def ekf_callback(self):
-        last_odom = self.last_odom
+        if not self.ekf_ready:
+            return  # Skip EKF update if not ready
         self.ekf.predict(u=[self.v,self.w], sigma_u=self.sigma_u, g_extra_args=(1/20,))
 
         
@@ -139,14 +148,14 @@ class EKF_node(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    localization_node = localization()
+    EKF_node = EKF_node()
 
-    rclpy.spin(localization_node)
+    rclpy.spin(EKF_node)
 
     # Destroy the node explicitly
     # (optional - otherwise it will be done automatically
     # when the garbage collector destroys the node object)
-    localization_node.destroy_node()
+    EKF_node.destroy_node()
     rclpy.shutdown()
 
 
