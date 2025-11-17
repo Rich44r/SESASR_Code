@@ -51,7 +51,14 @@ class EKF_node(Node):
         with open(self.filename, 'r') as file:
             data = yaml.safe_load(file)
 
-        self.landmarks_matrix = np.column_stack((  data['landmarks']['x'],data['landmarks']['y']))
+        landmarks_matrix = np.column_stack((  data['landmarks']['x'],data['landmarks']['y']))
+        id_list = [11, 12, 13, 21, 22, 23, 31, 32, 33]
+        landmarks_matrix = np.column_stack((  data['landmarks']['x'],data['landmarks']['y']))
+
+        #creation of a dictionary
+        self.landmarks_coordinate = {}
+        for id, landmark in zip(id_list, landmarks_matrix):
+            self.landmarks_coordinate[id] = landmark
 
         # Create a timer to call the EKF update at a fixed rate
         self.timer = self.create_timer(1/20, self.ekf_callback)  # 20 Hz
@@ -114,7 +121,7 @@ class EKF_node(Node):
                         eval_hx=utils.eval_hx_landm,
                         eval_Ht=utils.eval_Ht_landm,
                         Qt=self.Q_landm,
-                        Ht_args=(*self.ekf.mu, *self.landmarks_matrix[id_seen]),  # the Ht function requires a flattened array of parameters
+                        Ht_args=(*self.ekf.mu, *self.landmarks_coordinate[id_seen]),  # the Ht function requires a flattened array of parameters
                         hx_args=(self.ekf.mu, lmark, self.sigma_z),
                         residual=utils.residual,
                         angle_idx=id_seen,

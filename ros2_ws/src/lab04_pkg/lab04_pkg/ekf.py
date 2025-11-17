@@ -82,8 +82,8 @@ class RobotEKF:
         # Compute the Kalman gain, you need to evaluate the Jacobian Ht
         Ht = eval_Ht(*Ht_args)
         SigmaHT = self.Sigma @ Ht.T
-        self.S = Ht @ SigmaHT + Qt
-        self.K = SigmaHT @ inv(self.S)
+        self.S = Ht @ SigmaHT + Qt#calcolo dell'incertezza della misura
+        self.K = SigmaHT @ inv(self.S) #calcolo del guadagno di Kalman
 
         # Evaluate the expected measurement and compute the residual, then update the state prediction
         z_hat = eval_hx(*hx_args)
