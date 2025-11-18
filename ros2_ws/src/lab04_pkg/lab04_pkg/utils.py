@@ -9,7 +9,22 @@ from sympy import symbols, Matrix
 from scipy.stats import norm
 
 
+def residual(a, b, **kwargs):
+    """
+    Compute the residual between expected and sensor measurements, normalizing angles between [-pi, pi)
+    If passed, angle_indx should indicate the positional index of the angle in the measurement arrays a and b
 
+    Returns:
+        y [np.array] : the residual between the two states
+    """
+    y = a - b
+
+    if 'angle_idx' in kwargs:
+        angle_idx = kwargs["angle_idx"]
+        theta = y[angle_idx]
+        y[angle_idx] = normalize_angle(theta)
+        
+    return y
 
 def normalize_angle(theta):
     """
@@ -21,22 +36,34 @@ def normalize_angle(theta):
     
     return theta
 def sample_velocity_motion_model(x, u, a, dt):
-    """ Sample velocity motion model.
+    """Sample velocity motion model.
     Arguments:
     x -- pose of the robot before moving [x, y, theta]
     u -- velocity reading obtained from the robot [v, w]
-    a -- noise parameters of the motion model [a1, a2, a3, a4, a5, a6]
+    sigma -- noise parameters of the motion model [a1, a2, a3, a4, a5, a6] or [std_dev_v, std_dev_w]
     dt -- time interval of prediction
     """
-    v_hat = u[0] + np.random.normal(0, a[0]*u[0]**2 + a[1]*u[1]**2)
-    w_hat = u[1] + np.random.normal(0, a[2]*u[0]**2 + a[3]*u[1]**2)
-    gamma_hat = np.random.normal(0, a[4]*u[0]**2 + a[5]*u[1]**2)
 
-    r = v_hat/w_hat
-    x_prime = x[0] - r*sin(x[2]) + r*sin(x[2]+w_hat*dt)
-    y_prime = x[1] + r*cos(x[2]) - r*cos(x[2]+w_hat*dt)
-    theta_prime = x[2] + w_hat*dt + gamma_hat*dt
-    #return of th new pose
+    sigma = np.ones((3))
+    if a.shape == u.shape:
+        sigma[:-1] = a[:]
+        sigma[-1] = a[1] * 0.5
+    else:
+        sigma[0] = a[0] * u[0] ** 2 + a[1] * u[1] ** 2
+        sigma[1] = a[2] * u[0] ** 2 + a[3] * u[1] ** 2
+        sigma[2] = a[4] * u[0] ** 2 + a[5] * u[1] ** 2
+
+    # sample noisy velocity commands to consider actuaction errors and unmodeled dynamics
+    v_hat = u[0] + np.random.normal(0, sigma[0])
+    w_hat = u[1] + np.random.normal(0, sigma[1])
+    gamma_hat = np.random.normal(0, sigma[2])
+
+    # compute the new pose of the robot according to the velocity motion model
+    r = v_hat / w_hat
+    x_prime = x[0] - r * sin(x[2]) + r * sin(x[2] + w_hat * dt)
+    y_prime = x[1] + r * cos(x[2]) - r * cos(x[2] + w_hat * dt)
+    theta_prime = x[2] + w_hat * dt + gamma_hat * dt
+
     return np.array([x_prime, y_prime, theta_prime])
 
 # Gaussian Function

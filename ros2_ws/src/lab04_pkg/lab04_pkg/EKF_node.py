@@ -30,6 +30,7 @@ class EKF_node(Node):
         self.Q_landm = np.diag([std_range**2, std_bearing**2])
         # Define H Jacobian function
         _, self.eval_Ht = utils.landmark_sm_simpy()
+        self.eval_hx_landm = utils.landmark_range_bearing_model
 
         #initialize EKF
         eval_gux = utils.sample_velocity_motion_model
@@ -118,13 +119,13 @@ class EKF_node(Node):
             #perform EKF update for each landmark
             self.ekf.update(
                         z,
-                        eval_hx=utils.eval_hx_landm,
-                        eval_Ht=utils.eval_Ht_landm,
-                        Qt=self.Q_landm,
-                        Ht_args=(*self.ekf.mu, *self.landmarks_coordinate[id_seen]),  # the Ht function requires a flattened array of parameters
-                        hx_args=(self.ekf.mu, lmark, self.sigma_z),
-                        residual=utils.residual,
-                        angle_idx=id_seen,
+                        eval_hx = self.eval_hx_landm,
+                        eval_Ht = self.eval_Ht,
+                        Qt = self.Q_landm,
+                        Ht_args = (*self.ekf.mu, *self.landmarks_coordinate[id_seen]),  # the Ht function requires a flattened array of parameters
+                        hx_args = (self.ekf.mu, lmark, self.sigma_z),
+                        residual = utils.residual,
+                        angle_idx = id_seen,
                     )
         
         # After processing all landmarks, publish the estimated pose
@@ -146,7 +147,7 @@ class EKF_node(Node):
     def ekf_callback(self):
         if not self.ekf_ready:
             return  # Skip EKF update if not ready
-        self.ekf.predict(u=[self.v,self.w], sigma_u=self.sigma_u, g_extra_args=(1/20,))
+        self.ekf.predict(u=np.array([self.v,self.w]), sigma_u=self.sigma_u, g_extra_args=(1/20,))
 
         
         
