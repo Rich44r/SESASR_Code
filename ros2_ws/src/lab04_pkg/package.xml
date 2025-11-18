@@ -12,6 +12,12 @@
   <exec_depend>std_msgs</exec_depend>    
   <exec_depend>landmark_msgs</exec_depend> 
   <exec_depend>tf_transformations</exec_depend>
+  <exec_depend>numpy</exec_depend>
+  <exec_depend>matplotlib</exec_depend>
+  <exec_depend>math</exec_depend>
+  <exec_depend>yaml</exec_depend>
+  <exec_depend>sympy</exec_depend>
+  <exec_depend>scipy</exec_depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
