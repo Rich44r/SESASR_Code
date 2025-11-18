@@ -5,20 +5,20 @@ import matplotlib.pyplot as plt
 from math import degrees, sin, cos
 import sympy
 
-from lab04_pkg.utils import landmark_model_sample_pose
+from lab04_pkg.utils import (
+    landmark_model_sample_pose,
+    evaluate_sampling_dist,
+    landmark_sm_simpy,
+    sample_velocity_motion_model,
+    velocity_mm_simpy
+    )
 
 arrow = u'$\u2191$'
 
 
 
 from lab04_pkg.ekf import RobotEKF
-from lab04_pkg.probabilistic_models import (
-    evaluate_sampling_dist,
-    landmark_sm_simpy,
-    sample_velocity_motion_model,
-    velocity_mm_simpy
 
-)
 
 
 

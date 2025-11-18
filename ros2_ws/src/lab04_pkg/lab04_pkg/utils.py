@@ -20,6 +20,24 @@ def normalize_angle(theta):
         theta -= 2 * np.pi
     
     return theta
+def sample_velocity_motion_model(x, u, a, dt):
+    """ Sample velocity motion model.
+    Arguments:
+    x -- pose of the robot before moving [x, y, theta]
+    u -- velocity reading obtained from the robot [v, w]
+    a -- noise parameters of the motion model [a1, a2, a3, a4, a5, a6]
+    dt -- time interval of prediction
+    """
+    v_hat = u[0] + np.random.normal(0, a[0]*u[0]**2 + a[1]*u[1]**2)
+    w_hat = u[1] + np.random.normal(0, a[2]*u[0]**2 + a[3]*u[1]**2)
+    gamma_hat = np.random.normal(0, a[4]*u[0]**2 + a[5]*u[1]**2)
+
+    r = v_hat/w_hat
+    x_prime = x[0] - r*sin(x[2]) + r*sin(x[2]+w_hat*dt)
+    y_prime = x[1] + r*cos(x[2]) - r*cos(x[2]+w_hat*dt)
+    theta_prime = x[2] + w_hat*dt + gamma_hat*dt
+    #return of th new pose
+    return np.array([x_prime, y_prime, theta_prime])
 
 # Gaussian Function
 def gaussian(x, mu, sigma):

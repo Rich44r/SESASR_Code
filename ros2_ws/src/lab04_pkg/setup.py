@@ -24,7 +24,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'ekf_robot = lab04_pkg.ekf_robot:main',
+            'ekf_node = lab04_pkg.EKF_node:main',
             'controller = lab04_pkg.controller:main',
         ],
     },

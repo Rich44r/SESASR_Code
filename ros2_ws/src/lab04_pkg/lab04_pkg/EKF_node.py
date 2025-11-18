@@ -2,8 +2,8 @@ import rclpy
 from rclpy.node import Node
 import tf_transformations
 import numpy as np
-from ekf import RobotEKF
-import utils
+from lab04_pkg.ekf import RobotEKF
+import lab04_pkg.utils as utils
 import yaml
 
 from geometry_msgs.msg import Twist, Pose2D
@@ -156,12 +156,12 @@ class EKF_node(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    EKF_node = EKF_node()
+    node = EKF_node()
 
-    rclpy.spin(EKF_node)
+    rclpy.spin(node)
 
     # Destroy the node explicitly
-    EKF_node.destroy_node()
+    node.destroy_node()
     rclpy.shutdown()
 
 
