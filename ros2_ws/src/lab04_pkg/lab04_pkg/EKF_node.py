@@ -123,9 +123,9 @@ class EKF_node(Node):
                         eval_Ht = self.eval_Ht,
                         Qt = self.Q_landm,
                         Ht_args = (*self.ekf.mu, *self.landmarks_coordinate[id_seen]),  # the Ht function requires a flattened array of parameters
-                        hx_args = (self.ekf.mu, lmark, self.sigma_z),
+                        hx_args = (self.ekf.mu, self.landmarks_coordinate[id_seen], self.sigma_z),
                         residual = utils.residual,
-                        angle_idx = id_seen,
+                        angle_idx = -1,
                     )
         
         # After processing all landmarks, publish the estimated pose
@@ -136,6 +136,7 @@ class EKF_node(Node):
         #filling the pose
         ekf_msg.pose.pose.position.x = self.ekf.mu[0]
         ekf_msg.pose.pose.position.y = self.ekf.mu[1]
+        #filling the orientation with quaternions (self.ekf.mu[2] is Yaw)
         quat = tf_transformations.quaternion_from_euler(0, 0, self.ekf.mu[2])
         ekf_msg.pose.pose.orientation.x = quat[0]
         ekf_msg.pose.pose.orientation.y = quat[1]
