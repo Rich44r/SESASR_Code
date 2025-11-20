@@ -48,7 +48,7 @@ class EKF_node(Node):
         self.ekf_ready = False
 
         #lettura landmark nel file yaml
-        self.filename = "/home/luke_skywalker/ros2_ws/src/turtlebot3_perception/turtlebot3_perception/config/landmarks.yaml"
+        self.filename = "/home/luke_skywalker/ros2_ws/src/lab04_pkg/lab04_pkg/landmarks_real.yaml"
 
         with open(self.filename, 'r') as file:
             data = yaml.safe_load(file)

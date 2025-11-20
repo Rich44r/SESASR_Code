@@ -26,6 +26,7 @@ setup(
         'console_scripts': [
             'ekf_node = lab04_pkg.EKF_node:main',
             'controller = lab04_pkg.controller:main',
+            'task3 = lab04_pkg.task3:main',
         ],
     },
 )

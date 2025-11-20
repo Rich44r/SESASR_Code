@@ -18,6 +18,9 @@
   <exec_depend>yaml</exec_depend>
   <exec_depend>sympy</exec_depend>
   <exec_depend>scipy</exec_depend>
+  <exec_depend>angles</exec_depend>
+
+
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

@@ -26,7 +26,7 @@ class ControllerNode(Node):
         self.velocity.angular.z = 0.0    
         self.velocity.linear.x=0.0
         
-        if scan.ranges[0] < 0.75:
+        if scan.ranges[0] < 0.3:
 
             if scan.ranges[89] > scan.ranges[269]:
                 self.velocity.angular.z = Max_angVel-0.5
@@ -35,9 +35,9 @@ class ControllerNode(Node):
         else: 
             self.velocity.linear.x = Max_Vel
             
-        if scan.ranges[29] < 0.6:
+        if scan.ranges[29] < 0.2:
             self.velocity.angular.z = -Max_angVel-0.5
-        elif scan.ranges[329] < 0.6: 
+        elif scan.ranges[329] < 0.2: 
             self.velocity.angular.z = Max_angVel-0.5
             
         self.publisher_.publish(self.velocity)
