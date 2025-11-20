@@ -11,6 +11,7 @@ from geometry_msgs.msg import Twist, Pose2D
 from nav_msgs.msg import Odometry
 from landmark_msgs.msg import LandmarkArray
 from std_msgs.msg import Bool
+from rclpy.qos import qos_profile_sensor_data
 
 
 class EKF_node(Node):
@@ -48,7 +49,7 @@ class EKF_node(Node):
         self.ekf_ready = False
 
         #lettura landmark nel file yaml
-        self.filename = "/home/luke_skywalker/ros2_ws/src/lab04_pkg/lab04_pkg/landmarks_real.yaml"
+        self.filename = "/home/students/group_206/src/lab04_pkg/lab04_pkg/landmarks_real.yaml"
 
         with open(self.filename, 'r') as file:
             data = yaml.safe_load(file)
@@ -70,20 +71,20 @@ class EKF_node(Node):
             Odometry,
             'odom',
             self.odom_callback,
-            10)
+            qos_profile_sensor_data)
         
         #read landmarks
         self.subscription = self.create_subscription(
             LandmarkArray,
-            'landmarks',
+            'camera/landmarks',
             self.landmarks_callback,
-            10)
+            qos_profile_sensor_data)
         
         #publish the estimated pose
         self.publisher_ = self.create_publisher(
             Odometry, 
             'ekf', 
-            10)
+            qos_profile_sensor_data)
 
 
         self.last_odom = None # ultima lettura di odometria
