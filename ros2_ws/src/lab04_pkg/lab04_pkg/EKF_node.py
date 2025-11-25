@@ -116,6 +116,7 @@ class EKF_node(Node):
         for lmark in landmarks_measured.landmarks: 
             #take measurement vector
             z = np.array([lmark.range, lmark.bearing])
+            self.get_logger().info(f'ID seen = {lmark.id}')
             id_seen = lmark.id
             #perform EKF update for each landmark
             self.ekf.update(

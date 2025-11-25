@@ -11,7 +11,6 @@ from geometry_msgs.msg import Twist, Pose2D
 from nav_msgs.msg import Odometry
 from landmark_msgs.msg import LandmarkArray
 from std_msgs.msg import Bool
-from rclpy.qos import qos_profile_sensor_data
 
 
 class EKF_node(Node):
@@ -35,11 +34,11 @@ class EKF_node(Node):
         self.eval_hx_landm = utils.landmark_range_bearing_model
 
         #initialize EKF
-        eval_gux = utils.sample_velocity_motion_model
-        _, eval_Gt, eval_Vt = utils.velocity_mm_simpy()
-        self.ekf = RobotEKF(dim_x=3, dim_u=2, eval_gux=eval_gux, eval_Gt=eval_Gt, eval_Vt=eval_Vt)
-        self.ekf.mu = np.array([0.0, 0.77, 3.14])  # x, y, theta
-        self.ekf.Sigma = np.diag([0.5, 0.5, 0.5]) #initial uncertainty
+        eval_gux = utils.sample_velocity_motion_model2
+        _, eval_Gt, eval_Vt = utils.velocity_mm_simpy2()
+        self.ekf = RobotEKF(dim_x=5, dim_u=2, eval_gux=eval_gux, eval_Gt=eval_Gt, eval_Vt=eval_Vt)
+        self.ekf.mu = np.array([0.0, 0.0, 0.0])  # x, y, theta
+        self.ekf.Sigma = np.diag([0.1, 0.1, 0.1])
         self.ekf.Mt = np.diag([std_lin_vel**2, std_ang_vel**2])
 
         # Initialize command variables
@@ -49,7 +48,7 @@ class EKF_node(Node):
         self.ekf_ready = False
 
         #lettura landmark nel file yaml
-        self.filename = "/home/students/group_206/src/lab04_pkg/lab04_pkg/landmarks_real.yaml"
+        self.filename = "/home/luke_skywalker/ros2_ws/src/turtlebot3_perception/turtlebot3_perception/config/landmarks.yaml"
 
         with open(self.filename, 'r') as file:
             data = yaml.safe_load(file)
@@ -71,20 +70,21 @@ class EKF_node(Node):
             Odometry,
             'odom',
             self.odom_callback,
-            qos_profile_sensor_data)
+            10)
         
         #read landmarks
         self.subscription = self.create_subscription(
             LandmarkArray,
-            'camera/landmarks',
+            'landmarks',
             self.landmarks_callback,
-            qos_profile_sensor_data)
+            10)
+
         
         #publish the estimated pose
         self.publisher_ = self.create_publisher(
             Odometry, 
             'ekf', 
-            qos_profile_sensor_data)
+            10)
 
 
         self.last_odom = None # ultima lettura di odometria
@@ -104,17 +104,29 @@ class EKF_node(Node):
 
         #enable EKF after first odometry reception
         self.ekf_ready = True
-        #self.get_logger().info(f'Extracted velocities: v={self.v}, w={self.w}')
+        self.ekf.update(
+            z = np.array([self.v, self.w]),
+            eval_hx = self.eval_hx_landm,
+            eval_Ht = self.eval_Ht,
+            Qt = self.Q_landm,
+            Ht_args = (),  # the Ht function requires a flattened array of parameters
+            hx_args = (self.ekf.mu,),
+
+        )
+    
 
     def landmarks_callback(self, msg):
+        if not self.ekf_ready:
+            #self.get_logger().info('EKF not ready, odometry data not yet received.')
+            return
 
         landmarks_measured = msg
         self.get_logger().info(f'Received Landmarks: number of landmarks={len(msg.landmarks)}')
         #Process each landmark measurement
-        for lmark in landmarks_measured.landmarks:
-           
+        for lmark in landmarks_measured.landmarks: 
             #take measurement vector
             z = np.array([lmark.range, lmark.bearing])
+            self.get_logger().info(f'ID seen = {lmark.id}')
             id_seen = lmark.id
             #perform EKF update for each landmark
             self.ekf.update(
