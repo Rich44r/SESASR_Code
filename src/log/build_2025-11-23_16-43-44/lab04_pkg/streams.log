@@ -1,0 +1,70 @@
+[0.543s] Invoking command in '/home/ema/SESAR/ros2_ws/src/lab04_pkg': PYTHONPATH=/home/ema/SESAR/ros2_ws/src/build/lab04_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/lab04_pkg build --build-base /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build install --record /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/install.log --single-version-externally-managed install_data
+[0.723s] running egg_info
+[0.724s] creating ../build/lab04_pkg/lab04_pkg.egg-info
+[0.724s] writing ../build/lab04_pkg/lab04_pkg.egg-info/PKG-INFO
+[0.724s] writing dependency_links to ../build/lab04_pkg/lab04_pkg.egg-info/dependency_links.txt
+[0.725s] writing entry points to ../build/lab04_pkg/lab04_pkg.egg-info/entry_points.txt
+[0.725s] writing requirements to ../build/lab04_pkg/lab04_pkg.egg-info/requires.txt
+[0.726s] writing top-level names to ../build/lab04_pkg/lab04_pkg.egg-info/top_level.txt
+[0.726s] writing manifest file '../build/lab04_pkg/lab04_pkg.egg-info/SOURCES.txt'
+[0.728s] reading manifest file '../build/lab04_pkg/lab04_pkg.egg-info/SOURCES.txt'
+[0.728s] adding license file 'LICENSE'
+[0.728s] writing manifest file '../build/lab04_pkg/lab04_pkg.egg-info/SOURCES.txt'
+[0.729s] running build
+[0.729s] running build_py
+[0.729s] creating /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build
+[0.729s] creating /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib
+[0.729s] creating /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib/lab04_pkg
+[0.729s] copying lab04_pkg/ekf.py -> /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib/lab04_pkg
+[0.730s] copying lab04_pkg/utils.py -> /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib/lab04_pkg
+[0.730s] copying lab04_pkg/probabilistic_models.py -> /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib/lab04_pkg
+[0.730s] copying lab04_pkg/landmarks.py -> /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib/lab04_pkg
+[0.730s] copying lab04_pkg/controller.py -> /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib/lab04_pkg
+[0.730s] copying lab04_pkg/__init__.py -> /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib/lab04_pkg
+[0.730s] copying lab04_pkg/task0.py -> /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib/lab04_pkg
+[0.730s] copying lab04_pkg/EKF_node.py -> /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib/lab04_pkg
+[0.731s] copying lab04_pkg/plot_utils.py -> /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib/lab04_pkg
+[0.731s] copying lab04_pkg/task3.py -> /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib/lab04_pkg
+[0.731s] copying lab04_pkg/velocity_motion_model.py -> /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib/lab04_pkg
+[0.731s] copying lab04_pkg/prova_landmarks.py -> /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib/lab04_pkg
+[0.731s] running install
+[0.731s] running install_lib
+[0.732s] creating /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg
+[0.732s] copying /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib/lab04_pkg/ekf.py -> /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg
+[0.732s] copying /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib/lab04_pkg/utils.py -> /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg
+[0.732s] copying /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib/lab04_pkg/probabilistic_models.py -> /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg
+[0.733s] copying /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib/lab04_pkg/landmarks.py -> /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg
+[0.733s] copying /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib/lab04_pkg/controller.py -> /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg
+[0.733s] copying /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib/lab04_pkg/__init__.py -> /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg
+[0.733s] copying /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib/lab04_pkg/task0.py -> /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg
+[0.733s] copying /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib/lab04_pkg/EKF_node.py -> /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg
+[0.733s] copying /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib/lab04_pkg/plot_utils.py -> /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg
+[0.733s] copying /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib/lab04_pkg/task3.py -> /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg
+[0.733s] copying /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib/lab04_pkg/velocity_motion_model.py -> /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg
+[0.733s] copying /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build/lib/lab04_pkg/prova_landmarks.py -> /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg
+[0.733s] byte-compiling /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg/ekf.py to ekf.cpython-310.pyc
+[0.734s] byte-compiling /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg/utils.py to utils.cpython-310.pyc
+[0.735s] byte-compiling /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg/probabilistic_models.py to probabilistic_models.cpython-310.pyc
+[0.736s] byte-compiling /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg/landmarks.py to landmarks.cpython-310.pyc
+[0.737s] byte-compiling /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg/controller.py to controller.cpython-310.pyc
+[0.738s] byte-compiling /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg/__init__.py to __init__.cpython-310.pyc
+[0.738s] byte-compiling /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg/task0.py to task0.cpython-310.pyc
+[0.738s] byte-compiling /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg/EKF_node.py to EKF_node.cpython-310.pyc
+[0.739s] byte-compiling /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg/plot_utils.py to plot_utils.cpython-310.pyc
+[0.740s] byte-compiling /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg/task3.py to task3.cpython-310.pyc
+[0.740s] byte-compiling /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg/velocity_motion_model.py to velocity_motion_model.cpython-310.pyc
+[0.741s] byte-compiling /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg/prova_landmarks.py to prova_landmarks.cpython-310.pyc
+[0.742s] running install_data
+[0.742s] creating /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/share/ament_index
+[0.742s] creating /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/share/ament_index/resource_index
+[0.742s] creating /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/share/ament_index/resource_index/packages
+[0.742s] copying resource/lab04_pkg -> /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/share/ament_index/resource_index/packages
+[0.743s] copying package.xml -> /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/share/lab04_pkg
+[0.743s] running install_egg_info
+[0.745s] Copying ../build/lab04_pkg/lab04_pkg.egg-info to /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages/lab04_pkg-0.0.0-py3.10.egg-info
+[0.745s] running install_scripts
+[0.764s] Installing controller script to /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/lab04_pkg
+[0.765s] Installing ekf_node script to /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/lab04_pkg
+[0.765s] Installing task3 script to /home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/lab04_pkg
+[0.765s] writing list of installed files to '/home/ema/SESAR/ros2_ws/src/build/lab04_pkg/install.log'
+[0.785s] Invoked command in '/home/ema/SESAR/ros2_ws/src/lab04_pkg' returned '0': PYTHONPATH=/home/ema/SESAR/ros2_ws/src/build/lab04_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/ema/SESAR/ros2_ws/src/install/lab04_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/lab04_pkg build --build-base /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/build install --record /home/ema/SESAR/ros2_ws/src/build/lab04_pkg/install.log --single-version-externally-managed install_data

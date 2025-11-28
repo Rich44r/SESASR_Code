@@ -1,0 +1,5 @@
+[console_scripts]
+controller = lab04_pkg.controller:main
+ekf_node = lab04_pkg.EKF_node:main
+task3 = lab04_pkg.task3:main
+

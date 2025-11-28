@@ -1,0 +1,58 @@
+[0.978s] Invoking command in '/home/ema/SESAR/ros2_ws/src/turtlebot3_perception/turtlebot3_perception': CMAKE_PREFIX_PATH=/home/ema/SESAR/ros2_ws/install/landmark_msgs:/home/ema/SESAR/ros2_ws/install/turtlebot3_simulations:/home/ema/SESAR/ros2_ws/install/turtlebot3_gazebo:/home/ema/SESAR/ros2_ws/install/turtlebot3_fake_node LD_LIBRARY_PATH=/home/ema/SESAR/ros2_ws/install/landmark_msgs/lib:/opt/ros/humble/opt/zenoh_cpp_vendor/lib:/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib:/usr/share/gazebo/../../lib/x86_64-linux-gnu/gazebo-11/plugins:/usr/share/gazebo/../../lib/x86_64-linux-gnu/gazebo-11/plugins:/usr/share/gazebo/../../lib/x86_64-linux-gnu/gazebo-11/plugins PYTHONPATH=/home/ema/SESAR/ros2_ws/build/turtlebot3_perception/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/ema/SESAR/ros2_ws/install/turtlebot3_perception/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../../build/turtlebot3_perception build --build-base /home/ema/SESAR/ros2_ws/build/turtlebot3_perception/build install --record /home/ema/SESAR/ros2_ws/build/turtlebot3_perception/install.log --single-version-externally-managed install_data
+[1.191s] running egg_info
+[1.192s] creating ../../../build/turtlebot3_perception/turtlebot3_perception.egg-info
+[1.192s] writing ../../../build/turtlebot3_perception/turtlebot3_perception.egg-info/PKG-INFO
+[1.192s] writing dependency_links to ../../../build/turtlebot3_perception/turtlebot3_perception.egg-info/dependency_links.txt
+[1.193s] writing entry points to ../../../build/turtlebot3_perception/turtlebot3_perception.egg-info/entry_points.txt
+[1.193s] writing requirements to ../../../build/turtlebot3_perception/turtlebot3_perception.egg-info/requires.txt
+[1.193s] writing top-level names to ../../../build/turtlebot3_perception/turtlebot3_perception.egg-info/top_level.txt
+[1.193s] writing manifest file '../../../build/turtlebot3_perception/turtlebot3_perception.egg-info/SOURCES.txt'
+[1.194s] reading manifest file '../../../build/turtlebot3_perception/turtlebot3_perception.egg-info/SOURCES.txt'
+[1.194s] adding license file 'LICENSE'
+[1.195s] writing manifest file '../../../build/turtlebot3_perception/turtlebot3_perception.egg-info/SOURCES.txt'
+[1.195s] running build
+[1.195s] running build_py
+[1.195s] creating /home/ema/SESAR/ros2_ws/build/turtlebot3_perception/build
+[1.196s] creating /home/ema/SESAR/ros2_ws/build/turtlebot3_perception/build/lib
+[1.196s] creating /home/ema/SESAR/ros2_ws/build/turtlebot3_perception/build/lib/turtlebot3_perception
+[1.196s] copying turtlebot3_perception/landmark_simulator.py -> /home/ema/SESAR/ros2_ws/build/turtlebot3_perception/build/lib/turtlebot3_perception
+[1.196s] copying turtlebot3_perception/laserscan2lines_node.py -> /home/ema/SESAR/ros2_ws/build/turtlebot3_perception/build/lib/turtlebot3_perception
+[1.197s] copying turtlebot3_perception/detection2landmark.py -> /home/ema/SESAR/ros2_ws/build/turtlebot3_perception/build/lib/turtlebot3_perception
+[1.197s] copying turtlebot3_perception/__init__.py -> /home/ema/SESAR/ros2_ws/build/turtlebot3_perception/build/lib/turtlebot3_perception
+[1.197s] copying turtlebot3_perception/laserscan2lines.py -> /home/ema/SESAR/ros2_ws/build/turtlebot3_perception/build/lib/turtlebot3_perception
+[1.197s] running install
+[1.197s] running install_lib
+[1.198s] creating /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/lib/python3.10/site-packages/turtlebot3_perception
+[1.198s] copying /home/ema/SESAR/ros2_ws/build/turtlebot3_perception/build/lib/turtlebot3_perception/landmark_simulator.py -> /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/lib/python3.10/site-packages/turtlebot3_perception
+[1.198s] copying /home/ema/SESAR/ros2_ws/build/turtlebot3_perception/build/lib/turtlebot3_perception/laserscan2lines_node.py -> /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/lib/python3.10/site-packages/turtlebot3_perception
+[1.199s] copying /home/ema/SESAR/ros2_ws/build/turtlebot3_perception/build/lib/turtlebot3_perception/detection2landmark.py -> /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/lib/python3.10/site-packages/turtlebot3_perception
+[1.199s] copying /home/ema/SESAR/ros2_ws/build/turtlebot3_perception/build/lib/turtlebot3_perception/__init__.py -> /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/lib/python3.10/site-packages/turtlebot3_perception
+[1.199s] copying /home/ema/SESAR/ros2_ws/build/turtlebot3_perception/build/lib/turtlebot3_perception/laserscan2lines.py -> /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/lib/python3.10/site-packages/turtlebot3_perception
+[1.199s] byte-compiling /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/lib/python3.10/site-packages/turtlebot3_perception/landmark_simulator.py to landmark_simulator.cpython-310.pyc
+[1.201s] byte-compiling /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/lib/python3.10/site-packages/turtlebot3_perception/laserscan2lines_node.py to laserscan2lines_node.cpython-310.pyc
+[1.201s] byte-compiling /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/lib/python3.10/site-packages/turtlebot3_perception/detection2landmark.py to detection2landmark.cpython-310.pyc
+[1.202s] byte-compiling /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/lib/python3.10/site-packages/turtlebot3_perception/__init__.py to __init__.cpython-310.pyc
+[1.202s] byte-compiling /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/lib/python3.10/site-packages/turtlebot3_perception/laserscan2lines.py to laserscan2lines.cpython-310.pyc
+[1.202s] running install_data
+[1.203s] creating /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/share/ament_index
+[1.203s] creating /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/share/ament_index/resource_index
+[1.203s] creating /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/share/ament_index/resource_index/packages
+[1.203s] copying resource/turtlebot3_perception -> /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/share/ament_index/resource_index/packages
+[1.203s] copying package.xml -> /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/share/turtlebot3_perception
+[1.204s] creating /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/share/turtlebot3_perception/launch
+[1.204s] copying launch/camera.launch.py -> /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/share/turtlebot3_perception/launch
+[1.204s] copying launch/apriltag.launch.py -> /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/share/turtlebot3_perception/launch
+[1.205s] copying launch/rs_launch_composable.launch.py -> /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/share/turtlebot3_perception/launch
+[1.205s] creating /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/share/turtlebot3_perception/config
+[1.205s] copying config/default.rviz -> /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/share/turtlebot3_perception/config
+[1.205s] copying config/apriltag.yaml -> /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/share/turtlebot3_perception/config
+[1.205s] copying config/oakd_config.yaml -> /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/share/turtlebot3_perception/config
+[1.205s] copying config/landmarks.yaml -> /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/share/turtlebot3_perception/config
+[1.205s] running install_egg_info
+[1.206s] Copying ../../../build/turtlebot3_perception/turtlebot3_perception.egg-info to /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/lib/python3.10/site-packages/turtlebot3_perception-0.0.0-py3.10.egg-info
+[1.207s] running install_scripts
+[1.227s] Installing detection2landmark script to /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/lib/turtlebot3_perception
+[1.227s] Installing landmark_simulator script to /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/lib/turtlebot3_perception
+[1.227s] Installing laserscan2lines script to /home/ema/SESAR/ros2_ws/install/turtlebot3_perception/lib/turtlebot3_perception
+[1.227s] writing list of installed files to '/home/ema/SESAR/ros2_ws/build/turtlebot3_perception/install.log'
+[1.258s] Invoked command in '/home/ema/SESAR/ros2_ws/src/turtlebot3_perception/turtlebot3_perception' returned '0': CMAKE_PREFIX_PATH=/home/ema/SESAR/ros2_ws/install/landmark_msgs:/home/ema/SESAR/ros2_ws/install/turtlebot3_simulations:/home/ema/SESAR/ros2_ws/install/turtlebot3_gazebo:/home/ema/SESAR/ros2_ws/install/turtlebot3_fake_node LD_LIBRARY_PATH=/home/ema/SESAR/ros2_ws/install/landmark_msgs/lib:/opt/ros/humble/opt/zenoh_cpp_vendor/lib:/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib:/usr/share/gazebo/../../lib/x86_64-linux-gnu/gazebo-11/plugins:/usr/share/gazebo/../../lib/x86_64-linux-gnu/gazebo-11/plugins:/usr/share/gazebo/../../lib/x86_64-linux-gnu/gazebo-11/plugins PYTHONPATH=/home/ema/SESAR/ros2_ws/build/turtlebot3_perception/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/ema/SESAR/ros2_ws/install/turtlebot3_perception/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../../build/turtlebot3_perception build --build-base /home/ema/SESAR/ros2_ws/build/turtlebot3_perception/build install --record /home/ema/SESAR/ros2_ws/build/turtlebot3_perception/install.log --single-version-externally-managed install_data
