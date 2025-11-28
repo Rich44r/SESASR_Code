@@ -38,8 +38,8 @@ class EKF_node(Node):
         eval_gux = utils.sample_velocity_motion_model
         _, eval_Gt, eval_Vt = utils.velocity_mm_simpy()
         self.ekf = RobotEKF(dim_x=3, dim_u=2, eval_gux=eval_gux, eval_Gt=eval_Gt, eval_Vt=eval_Vt)
-        self.ekf.mu = np.array([0.0, 0.77, 3.14])  # x, y, theta
-        self.ekf.Sigma = np.diag([0.5, 0.5, 0.5]) #initial uncertainty
+        self.ekf.mu = np.array([0.0, 0.77, 0.0])  # x, y, theta
+        self.ekf.Sigma = np.diag([0.1, 0.1, 0.1])
         self.ekf.Mt = np.diag([std_lin_vel**2, std_ang_vel**2])
 
         # Initialize command variables
@@ -55,7 +55,7 @@ class EKF_node(Node):
             data = yaml.safe_load(file)
 
         landmarks_matrix = np.column_stack((  data['landmarks']['x'],data['landmarks']['y']))
-        id_list = [11, 12, 13, 21, 22, 23, 31, 32, 33]
+        id_list = [0,1,2,3,4,5,6,7]
         landmarks_matrix = np.column_stack((  data['landmarks']['x'],data['landmarks']['y']))
 
         #creation of a dictionary
@@ -107,12 +107,15 @@ class EKF_node(Node):
         #self.get_logger().info(f'Extracted velocities: v={self.v}, w={self.w}')
 
     def landmarks_callback(self, msg):
+        self.get_logger().info('Received Landmark topic')
+        #if not self.ekf_ready:
+            #self.get_logger().info('EKF not ready, odometry data not yet received.')
+            #return
 
         landmarks_measured = msg
         self.get_logger().info(f'Received Landmarks: number of landmarks={len(msg.landmarks)}')
         #Process each landmark measurement
-        for lmark in landmarks_measured.landmarks:
-           
+        for lmark in landmarks_measured.landmarks: 
             #take measurement vector
             z = np.array([lmark.range, lmark.bearing])
             id_seen = lmark.id
