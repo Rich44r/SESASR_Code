@@ -4,6 +4,18 @@ from scipy.interpolate import interp1d
 from rclpy.time import Time
 import matplotlib.pyplot as plt
 import lab04_pkg.utils as utils
+import tf_transformations
+
+def convert_quat(msg):
+    orientation = msg
+    quaternion = (
+        orientation.x,
+        orientation.y,
+        orientation.z,
+        orientation.w)
+    euler = tf_transformations.euler_from_quaternion(quaternion)
+
+    return (euler[2])
 
 #open rosbag
 path = "/home/luke_skywalker/ros2_ws/rosbag2_2025_11_29-17_02_05"
@@ -24,14 +36,17 @@ reader.set_filter(["/ground_truth","/ekf", "/odom"])
 
 for topic_name, msg, t in reader:
     if topic_name == "/ground_truth":
+        yaw = convert_quat(msg.pose.pose.orientation)
         time_gt.append(Time.from_msg(msg.header.stamp).nanoseconds)
-        data_gt.append((msg.pose.pose.position.x, msg.pose.pose.position.y, msg.pose.pose.orientation.z))
+        data_gt.append((msg.pose.pose.position.x, msg.pose.pose.position.y, yaw))
     elif topic_name == "/ekf":
+        yaw = convert_quat(msg.pose.pose.orientation)
         time_ekf.append(Time.from_msg(msg.header.stamp).nanoseconds)
-        data_ekf.append((msg.pose.pose.position.x, msg.pose.pose.position.y, msg.pose.pose.orientation.z))
+        data_ekf.append((msg.pose.pose.position.x, msg.pose.pose.position.y, yaw))
     elif topic_name == "/odom":
+        yaw = convert_quat(msg.pose.pose.orientation)
         time_odom.append(Time.from_msg(msg.header.stamp).nanoseconds)
-        data_odom.append((msg.pose.pose.position.x, msg.pose.pose.position.y, msg.pose.pose.orientation.z))
+        data_odom.append((msg.pose.pose.position.x, msg.pose.pose.position.y, yaw))
 
 time_gt = np.array(time_gt)
 data_gt = np.array(data_gt)
@@ -89,7 +104,17 @@ MAE_odom = utils.mae(odom_error)
 print(f'MAE of odom data: {MAE_odom}')
 
 #--plots for each state--
+
 #x(t) state
+plt.figure(figsize=(10,5))
+plt.plot(time_odom, data_odom[:,0], label="odom")
+plt.plot(time_gt, data_int_gt[:,0], label="ground_truth")
+plt.plot(time_ekf, data_int_ekf[:,0], label="ekf")
+plt.legend()
+plt.title("X(t) – confronto tra i topic")
+plt.grid(True)
+plt.show()
+
 
 plt.subplot(3,1,1)
 plt.plot(time_gt, data_gt[:,0])
