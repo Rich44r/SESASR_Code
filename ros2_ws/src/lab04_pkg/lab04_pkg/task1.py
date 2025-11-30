@@ -18,7 +18,7 @@ def convert_quat(msg):
     return (euler[2])
 
 #open rosbag
-path = "/home/luke_skywalker/ros2_ws/rosbag2_2025_11_29-17_02_05"
+path = "/home/luke_skywalker/ros2_ws/rosbag2_2025_11_30-17_02_47"
 
 reader = Rosbag2Reader(path)
 topics = reader.all_topics
@@ -108,63 +108,30 @@ print(f'MAE of odom data: {MAE_odom}')
 #x(t) state
 plt.figure(figsize=(10,5))
 plt.plot(time_odom, data_odom[:,0], label="odom")
-plt.plot(time_gt, data_int_gt[:,0], label="ground_truth")
-plt.plot(time_ekf, data_int_ekf[:,0], label="ekf")
+plt.plot(time_odom, data_int_ekf[:,0], label="ekf", linestyle = ":")
+plt.plot(time_odom, data_int_gt[:,0], label="ground_truth")
 plt.legend()
-plt.title("X(t) – confronto tra i topic")
+plt.title("X(t) – Comparison of topics")
 plt.grid(True)
 plt.show()
 
-
-plt.subplot(3,1,1)
-plt.plot(time_gt, data_gt[:,0])
-plt.title('X(t) /ground_truth')
-plt.grid(True)
-
-
-plt.subplot(3,1,2)
-plt.plot(time_ekf, data_ekf[:,0])
-plt.title('X(t) /ekf')
-plt.grid(True)
-
-plt.subplot(3,1,3)
-plt.plot(time_odom, data_odom[:,0])
-plt.title('X(t) /odom')
-plt.grid(True)
-plt.show()
 
 #y(t) state
-plt.subplot(3,1,1)
-plt.plot(time_gt, data_gt[:,1])
-plt.title('Y(t) /ground_truth')
-plt.grid(True)
-
-
-plt.subplot(3,1,2)
-plt.plot(time_ekf, data_ekf[:,1])
-plt.title('Y(t) /ekf')
-plt.grid(True)
-
-plt.subplot(3,1,3)
-plt.plot(time_odom, data_odom[:,1])
-plt.title('Y(t) /odom')
+plt.figure(figsize=(10,5))
+plt.plot(time_odom, data_odom[:,1], label="odom")
+plt.plot(time_odom, data_int_ekf[:,1], label="ekf", linestyle = ":")
+plt.plot(time_odom, data_int_gt[:,1], label="ground_truth")
+plt.legend()
+plt.title("Y(t) – Comparison of topics")
 plt.grid(True)
 plt.show()
 
 #θ(t) state
-plt.subplot(3,1,1)
-plt.plot(time_gt, data_gt[:,2])
-plt.title('θ(t) /ground_truth')
-plt.grid(True)
-
-
-plt.subplot(3,1,2)
-plt.plot(time_ekf, data_ekf[:,2])
-plt.title('θ(t) /ekf')
-plt.grid(True)
-
-plt.subplot(3,1,3)
-plt.plot(time_odom, data_odom[:,2])
-plt.title('θ(t) /odom')
+plt.figure(figsize=(10,5))
+plt.plot(time_odom, data_odom[:,2], label="odom")
+plt.plot(time_odom, data_int_ekf[:,2], label="ekf", linestyle = ":")
+plt.plot(time_odom, data_int_gt[:,2], label="ground_truth")
+plt.legend()
+plt.title("θ(t) – Comparison of topics")
 plt.grid(True)
 plt.show()
