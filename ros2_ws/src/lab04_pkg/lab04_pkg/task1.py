@@ -1,4 +1,3 @@
-#Here is contained the part regarding the plots for task1
 from rosbag2_reader_py import Rosbag2Reader
 import numpy as np
 from scipy.interpolate import interp1d
@@ -7,7 +6,7 @@ import matplotlib.pyplot as plt
 import lab04_pkg.utils as utils
 
 #open rosbag
-path = "/home/luke_skywalker/ros2_ws/rosbag2_2025_11_28-09_34_14"
+path = "/home/luke_skywalker/ros2_ws/rosbag2_2025_11_29-17_02_05"
 
 reader = Rosbag2Reader(path)
 topics = reader.all_topics
@@ -21,18 +20,18 @@ time_ekf = []
 data_ekf = []
 
 #topics we are interested in
-reader.set_filter(["/ground_truth", "/ekf", "/odom"])
+reader.set_filter(["/ground_truth","/ekf", "/odom"])
 
 for topic_name, msg, t in reader:
     if topic_name == "/ground_truth":
         time_gt.append(Time.from_msg(msg.header.stamp).nanoseconds)
-        data_gt.append((msg.pose.pose.position.x, msg.pose.pose.position.y))
+        data_gt.append((msg.pose.pose.position.x, msg.pose.pose.position.y, msg.pose.pose.orientation.z))
     elif topic_name == "/ekf":
         time_ekf.append(Time.from_msg(msg.header.stamp).nanoseconds)
-        data_ekf.append((msg.pose.pose.position.x, msg.pose.pose.position.y))
+        data_ekf.append((msg.pose.pose.position.x, msg.pose.pose.position.y, msg.pose.pose.orientation.z))
     elif topic_name == "/odom":
         time_odom.append(Time.from_msg(msg.header.stamp).nanoseconds)
-        data_odom.append((msg.pose.pose.position.x, msg.pose.pose.position.y))
+        data_odom.append((msg.pose.pose.position.x, msg.pose.pose.position.y, msg.pose.pose.orientation.z))
 
 time_gt = np.array(time_gt)
 data_gt = np.array(data_gt)
@@ -61,29 +60,86 @@ plt.show()
 
 #Interpolation 
 gt_interpol = interp1d(time_gt, data_gt, axis=0, fill_value="extrapolate", kind="nearest")
-interpolation_odom = gt_interpol(time_odom)
-print(f"Interpolated ground truth points: {len(interpolation_odom)}")
+data_int_gt = gt_interpol(time_odom)
+print(f"Interpolated ground truth points: {len(data_int_gt)}")
 
-gt_interpol = interp1d(time_gt, data_gt, axis=0, fill_value="extrapolate", kind="nearest")
-interpolation_ekf = gt_interpol(time_ekf)
-print(f"Interpolated ground truth points: {len(interpolation_ekf)}")
+gt_interpol = interp1d(time_ekf, data_ekf, axis=0, fill_value="extrapolate", kind="nearest")
+data_int_ekf = gt_interpol(time_odom)
+print(f"Interpolated ekf points: {len(data_int_ekf)}")
 
 #RMSE and MAE for ekf data
 print("---EKF metrics---")
-RMSE_ekf = utils.rmse(interpolation_ekf, data_ekf)
+#actual - predicted
+RMSE_ekf = utils.rmse(data_int_gt, data_int_ekf)
 print(f'RMSE of ekf data: {RMSE_ekf}')
 
 #error: actual - predicted
-ekf_error = np.array(data_ekf - interpolation_ekf)
+ekf_error = np.array(data_int_gt - data_int_ekf)
 MAE_ekf = utils.mae(ekf_error)
 print(f'MAE of ekf data: {MAE_ekf}')
 
 #RMSE and MAE for odom data
 print("---ODOM metrics---")
-RMSE_odom = utils.rmse(interpolation_odom, data_odom)
+RMSE_odom = utils.rmse(data_int_gt, data_odom)
 print(f'RMSE of odom data: {RMSE_odom}')
 
 #error: actual - predicted
-odom_error = np.array(data_odom - interpolation_odom)
+odom_error = np.array(data_int_gt - data_odom)
 MAE_odom = utils.mae(odom_error)
 print(f'MAE of odom data: {MAE_odom}')
+
+#--plots for each state--
+#x(t) state
+
+plt.subplot(3,1,1)
+plt.plot(time_gt, data_gt[:,0])
+plt.title('X(t) /ground_truth')
+plt.grid(True)
+
+
+plt.subplot(3,1,2)
+plt.plot(time_ekf, data_ekf[:,0])
+plt.title('X(t) /ekf')
+plt.grid(True)
+
+plt.subplot(3,1,3)
+plt.plot(time_odom, data_odom[:,0])
+plt.title('X(t) /odom')
+plt.grid(True)
+plt.show()
+
+#y(t) state
+plt.subplot(3,1,1)
+plt.plot(time_gt, data_gt[:,1])
+plt.title('Y(t) /ground_truth')
+plt.grid(True)
+
+
+plt.subplot(3,1,2)
+plt.plot(time_ekf, data_ekf[:,1])
+plt.title('Y(t) /ekf')
+plt.grid(True)
+
+plt.subplot(3,1,3)
+plt.plot(time_odom, data_odom[:,1])
+plt.title('Y(t) /odom')
+plt.grid(True)
+plt.show()
+
+#θ(t) state
+plt.subplot(3,1,1)
+plt.plot(time_gt, data_gt[:,2])
+plt.title('θ(t) /ground_truth')
+plt.grid(True)
+
+
+plt.subplot(3,1,2)
+plt.plot(time_ekf, data_ekf[:,2])
+plt.title('θ(t) /ekf')
+plt.grid(True)
+
+plt.subplot(3,1,3)
+plt.plot(time_odom, data_odom[:,2])
+plt.title('θ(t) /odom')
+plt.grid(True)
+plt.show()
