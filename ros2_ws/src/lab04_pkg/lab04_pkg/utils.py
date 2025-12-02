@@ -345,3 +345,21 @@ def evaluate_sampling_dist(mu, sigma, n_samples, sample_function):
     plt.grid()
     plt.savefig("gaussian_dist.pdf")
     plt.show()
+
+def _error(actual: np.ndarray, predicted: np.ndarray):
+    """ Simple error """
+    return actual - predicted
+
+def mse(actual: np.ndarray, predicted: np.ndarray):
+    """ Mean Squared Error """
+    if len(actual.shape)==1 and len(predicted.shape)==1:
+        return np.mean(np.square(_error(actual, predicted)), axis=0)
+    return np.mean(np.sum(np.square(_error(actual, predicted)), axis=1), axis=0)
+
+def rmse(actual: np.ndarray, predicted: np.ndarray):
+    """ Root Mean Squared Error """
+    return np.sqrt(mse(actual, predicted))
+
+def mae(error: np.ndarray):
+    """ Mean Absolute Error """
+    return np.mean(np.abs(error))

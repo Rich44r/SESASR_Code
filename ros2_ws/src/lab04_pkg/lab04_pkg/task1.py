@@ -18,7 +18,7 @@ def convert_quat(msg):
     return (euler[2])
 
 #open rosbag
-path = "/home/luke_skywalker/ros2_ws/rosbag2_2025_11_30-17_02_47"
+path = "/home/luke_skywalker/ros2_ws/rosbag2_2025_12_02-15_52_43"
 
 reader = Rosbag2Reader(path)
 topics = reader.all_topics

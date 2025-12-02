@@ -38,7 +38,7 @@ class EKF_node(Node):
         _, eval_Gt, eval_Vt = utils.velocity_mm_simpy()
         self.ekf = RobotEKF(dim_x=3, dim_u=2, eval_gux=eval_gux, eval_Gt=eval_Gt, eval_Vt=eval_Vt)
         self.ekf.mu = np.array([0.0, 0.0, 0.0])  # x, y, theta
-        self.ekf.Sigma = np.diag([0.1, 0.1, 0.1])
+        self.ekf.Sigma = np.diag([0.0, 0.0, 0.0])
         self.ekf.Mt = np.diag([std_lin_vel**2, std_ang_vel**2])
 
         # Initialize command variables
