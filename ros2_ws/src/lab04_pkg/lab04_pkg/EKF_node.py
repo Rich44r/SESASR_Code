@@ -26,7 +26,7 @@ class EKF_node(Node):
 
         # Define noise params and Q for landmark sensor model
         std_range = 0.1  # [m]
-        std_bearing = np.deg2rad(1.0)  # [rad]
+        std_bearing = np.deg2rad(0.1)  # [rad]
         self.sigma_z = np.array([std_range, std_bearing])
         self.Q_landm = np.diag([std_range**2, std_bearing**2])
         # Define H Jacobian function
@@ -37,7 +37,7 @@ class EKF_node(Node):
         eval_gux = utils.sample_velocity_motion_model
         _, eval_Gt, eval_Vt = utils.velocity_mm_simpy()
         self.ekf = RobotEKF(dim_x=3, dim_u=2, eval_gux=eval_gux, eval_Gt=eval_Gt, eval_Vt=eval_Vt)
-        self.ekf.mu = np.array([0.0, 0.0, 0.0])  # x, y, theta
+        self.ekf.mu = np.array([-1.99, -0.5, 0.0])  # x, y, theta
         self.ekf.Sigma = np.diag([0.0, 0.0, 0.0])
         self.ekf.Mt = np.diag([std_lin_vel**2, std_ang_vel**2])
 

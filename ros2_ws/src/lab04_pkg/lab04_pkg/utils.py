@@ -90,23 +90,6 @@ def compute_p_hit_dist(dist, max_dist, sigma):
 
     return p_hit
 
-# Plot the distribution of z samples
-def plot_sampling_dist(samples, title="Distribution of z samples", fig_name="z_star_hist.pdf"):
-    '''
-    Plot the distribution of z samples.
-    Args:
-        samples: array of z samples
-        title: title of the plot
-        fig_name: name of the file to save the plot
-    '''
-    
-    n_bins = 100
-    plt.hist(samples, n_bins)
-    plt.title(title)
-    plt.grid()
-    plt.savefig(fig_name)
-    plt.show()
-    plt.close('all')
 
 def landmark_model_sample_pose(z, landmark, sigma):
     """""
@@ -130,27 +113,6 @@ def landmark_model_sample_pose(z, landmark, sigma):
     theta_ = gamma_hat - math.pi - phi_hat
 
     return np.array([x_, y_, theta_])
-
-def get_odometry_command(odom_pose, odom_pose_prev):
-    """Transform robot poses taken from odometry to u command
-    Arguments:
-    odom_pose -- last odometry pose of the robot [x, y, theta] at time t
-    odom_pose_prev -- previous odometry pose of the robot [x, y, theta] at time t-1
-
-    Output:
-    u_odom : np.array [rot1, trasl, rot2]
-    """
-
-    x_odom, y_odom, theta_odom = odom_pose[:]
-    x_odom_prev, y_odom_prev, theta_odom_prev = odom_pose_prev[:]
-
-    rot1 = math.atan2(y_odom - y_odom_prev, x_odom - x_odom_prev) - theta_odom_prev
-    trasl = sqrt((x_odom - x_odom_prev) ** 2 + (y_odom - y_odom_prev) ** 2)
-    rot2 = theta_odom - theta_odom_prev - rot1
-
-    return np.array([rot1, trasl, rot2])
-
-
 
 
 def landmark_range_bearing_model(robot_pose, landmark, sigma):

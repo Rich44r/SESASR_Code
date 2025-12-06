@@ -30,7 +30,7 @@ def main():
     n_samples = 500
     x = np.array([2, 4, 0])  # initial robot pose
     u = np.array([0.8, 0.6])  # [v, w]
-    a = np.array([0.001, 0.01, 0.1, 0.2, 0.05, 0.05])  # noise parameters for velocity motion model
+    a = np.array([0.01, 0.05, 0.2, 0.2, 0.1, 0.1])  # noise parameters for velocity motion model
     x_prime = np.zeros((n_samples, 3))
 
     for i in range(n_samples):
